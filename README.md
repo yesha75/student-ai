@@ -49,7 +49,16 @@ cp .env.example .env
 npm run dev
 ```
 
-## 🔑 Environment Variables
+## � Deploy to Vercel
+
+1. Install or sign in to Vercel CLI: `npm i -g vercel`
+2. Run: `vercel`
+3. When prompted, set the framework to `Other` and the build command to `npm run vercel-build`.
+4. Add any `VITE_` environment variables in the Vercel dashboard or using `vercel env add`.
+
+> The `vercel.json` file is configured to build this Vite app and route all pages to `index.html` for client-side navigation.
+
+## �🔑 Environment Variables
 
 ```
 VITE_OPENROUTER_API_KEY=your_key
