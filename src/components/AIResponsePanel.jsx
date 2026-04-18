@@ -6,7 +6,8 @@
 import React, { useState } from 'react';
 import {
   BookOpen, DollarSign, Heart, Lightbulb, Music,
-  Zap, ChevronDown, ChevronUp, AlertTriangle, CheckCircle
+  Zap, ChevronDown, ChevronUp, AlertTriangle, CheckCircle,
+  ListTodo, Clock
 } from 'lucide-react';
 
 const SECTION_CONFIG = {
@@ -31,6 +32,12 @@ const SECTION_CONFIG = {
     bg: 'rgba(255, 107, 107, 0.08)',
     border: 'rgba(255, 107, 107, 0.2)',
   },
+};
+
+const PRIORITY_CONFIG = {
+  high:   { color: '#FF6B6B', bg: 'rgba(255,107,107,0.15)', label: 'HIGH'   },
+  medium: { color: '#FFD700', bg: 'rgba(255,215,0,0.15)',   label: 'MED'    },
+  low:    { color: '#00F5C4', bg: 'rgba(0,245,196,0.15)',   label: 'LOW'    },
 };
 
 function ImpactSection({ type, data, delay }) {
@@ -71,7 +78,9 @@ function ImpactSection({ type, data, delay }) {
               {delta > 0 ? `+${delta}` : delta}
             </span>
           )}
-          {expanded ? <ChevronUp size={14} color="rgba(255,255,255,0.4)" /> : <ChevronDown size={14} color="rgba(255,255,255,0.4)" />}
+          {expanded
+            ? <ChevronUp size={14} color="rgba(255,255,255,0.4)" />
+            : <ChevronDown size={14} color="rgba(255,255,255,0.4)" />}
         </div>
       </button>
 
@@ -91,6 +100,89 @@ function ImpactSection({ type, data, delay }) {
   );
 }
 
+// ── Today's Task List section ──────────────────────────────────
+function TodaysTaskSection({ tasks, delay }) {
+  const [expanded, setExpanded] = useState(true);
+
+  if (!Array.isArray(tasks) || tasks.length === 0) return null;
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden response-section"
+      style={{
+        background: 'rgba(108,99,255,0.07)',
+        border: '1px solid rgba(108,99,255,0.22)',
+        animationDelay: `${delay}ms`,
+      }}
+    >
+      {/* Header */}
+      <button
+        className="w-full flex items-center justify-between p-4 text-left"
+        onClick={() => setExpanded(e => !e)}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center"
+            style={{ background: 'rgba(108,99,255,0.2)' }}
+          >
+            <ListTodo size={16} color="#6C63FF" />
+          </div>
+          <span className="font-display font-semibold text-sm text-white/90">
+            Today's Task Plan
+          </span>
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-mono font-bold"
+            style={{ background: 'rgba(108,99,255,0.2)', color: '#a89fff' }}
+          >
+            {tasks.length} tasks
+          </span>
+        </div>
+        {expanded
+          ? <ChevronUp size={14} color="rgba(255,255,255,0.4)" />
+          : <ChevronDown size={14} color="rgba(255,255,255,0.4)" />}
+      </button>
+
+      {/* Task rows */}
+      {expanded && (
+        <div className="px-4 pb-4 space-y-2">
+          {tasks.map((t, i) => {
+            const p = PRIORITY_CONFIG[t.priority] || PRIORITY_CONFIG.medium;
+            return (
+              <div
+                key={i}
+                className="flex items-start gap-3 p-3 rounded-xl"
+                style={{ background: 'rgba(255,255,255,0.04)' }}
+              >
+                {/* Time */}
+                <div className="flex items-center gap-1 flex-shrink-0 mt-0.5">
+                  <Clock size={11} color="rgba(255,255,255,0.3)" />
+                  <span className="text-xs font-mono text-white/40 whitespace-nowrap">
+                    {t.time}
+                  </span>
+                </div>
+
+                {/* Task info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white/85 leading-snug">{t.task}</p>
+                  <p className="text-xs text-white/50 leading-relaxed mt-0.5">{t.detail}</p>
+                </div>
+
+                {/* Priority badge */}
+                <span
+                  className="text-xs font-mono font-bold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5"
+                  style={{ color: p.color, background: p.bg }}
+                >
+                  {p.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AIResponsePanel({ response, isLoading, query }) {
   // Loading skeleton
   if (isLoading) {
@@ -101,10 +193,10 @@ export default function AIResponsePanel({ response, isLoading, query }) {
             <div className="w-8 h-8 rounded-full animate-pulse" style={{ background: 'rgba(108,99,255,0.3)' }} />
             <div className="h-4 w-48 rounded-lg animate-pulse" style={{ background: 'rgba(108,99,255,0.2)' }} />
           </div>
-          {[1,2,3].map(i => (
+          {[1, 2, 3].map(i => (
             <div key={i} className="mb-3 space-y-2">
-              <div className="h-3 w-full rounded animate-pulse" style={{ background: 'rgba(255,255,255,0.05)', animationDelay: `${i*0.1}s` }} />
-              <div className="h-3 w-4/5 rounded animate-pulse" style={{ background: 'rgba(255,255,255,0.04)', animationDelay: `${i*0.15}s` }} />
+              <div className="h-3 w-full rounded animate-pulse" style={{ background: 'rgba(255,255,255,0.05)', animationDelay: `${i * 0.1}s` }} />
+              <div className="h-3 w-4/5 rounded animate-pulse" style={{ background: 'rgba(255,255,255,0.04)', animationDelay: `${i * 0.15}s` }} />
             </div>
           ))}
           <div className="mt-4 flex items-center gap-2 text-sm text-white/40">
@@ -121,10 +213,14 @@ export default function AIResponsePanel({ response, isLoading, query }) {
   // Empty state
   if (!response) {
     return (
-      <div className="glass-card p-8 flex flex-col items-center justify-center text-center gap-4"
-        style={{ minHeight: 280 }}>
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center animate-float"
-          style={{ background: 'rgba(108,99,255,0.15)', border: '1px solid rgba(108,99,255,0.2)' }}>
+      <div
+        className="glass-card p-8 flex flex-col items-center justify-center text-center gap-4"
+        style={{ minHeight: 280 }}
+      >
+        <div
+          className="w-16 h-16 rounded-2xl flex items-center justify-center animate-float"
+          style={{ background: 'rgba(108,99,255,0.15)', border: '1px solid rgba(108,99,255,0.2)' }}
+        >
           <Lightbulb size={28} color="#6C63FF" />
         </div>
         <div>
@@ -141,8 +237,11 @@ export default function AIResponsePanel({ response, isLoading, query }) {
             "How do I stick to my budget?",
             "I have 3 exams this week",
           ].map(hint => (
-            <span key={hint} className="text-xs px-3 py-1.5 rounded-full text-white/40"
-              style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+            <span
+              key={hint}
+              className="text-xs px-3 py-1.5 rounded-full text-white/40"
+              style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+            >
               "{hint}"
             </span>
           ))}
@@ -151,30 +250,34 @@ export default function AIResponsePanel({ response, isLoading, query }) {
     );
   }
 
-  const urgencyColor = response.urgency === 'high' ? '#FF6B6B' : response.urgency === 'medium' ? '#FFD700' : '#00F5C4';
+  const urgencyColor =
+    response.urgency === 'high' ? '#FF6B6B' :
+    response.urgency === 'medium' ? '#FFD700' :
+    '#00F5C4';
 
   return (
     <div className="space-y-3">
       {/* Header: situation summary */}
-      <div
-        className="glass-card p-5 response-section"
-        style={{ animationDelay: '0ms' }}
-      >
+      <div className="glass-card p-5 response-section" style={{ animationDelay: '0ms' }}>
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: 'rgba(108,99,255,0.2)' }}>
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center"
+              style={{ background: 'rgba(108,99,255,0.2)' }}
+            >
               <Zap size={14} color="#6C63FF" />
             </div>
             <span className="font-display font-semibold text-sm text-white/80">Situation Analysis</span>
           </div>
           {response.urgency && (
-            <span className="text-xs px-2.5 py-1 rounded-full font-mono font-bold"
+            <span
+              className="text-xs px-2.5 py-1 rounded-full font-mono font-bold"
               style={{
                 color: urgencyColor,
                 background: `${urgencyColor}18`,
                 border: `1px solid ${urgencyColor}30`,
-              }}>
+              }}
+            >
               {response.urgency.toUpperCase()} URGENCY
             </span>
           )}
@@ -183,9 +286,9 @@ export default function AIResponsePanel({ response, isLoading, query }) {
       </div>
 
       {/* 3 impact sections */}
-      <ImpactSection type="academic" data={response.academicImpact} delay={100} />
+      <ImpactSection type="academic"  data={response.academicImpact}  delay={100} />
       <ImpactSection type="financial" data={response.financialImpact} delay={200} />
-      <ImpactSection type="stress" data={response.stressImpact} delay={300} />
+      <ImpactSection type="stress"    data={response.stressImpact}    delay={300} />
 
       {/* Recommendation */}
       <div
@@ -205,6 +308,9 @@ export default function AIResponsePanel({ response, isLoading, query }) {
         <p className="text-sm text-white/85 leading-relaxed font-medium">{response.recommendation}</p>
       </div>
 
+      {/* ── Today's Task Plan ── */}
+      <TodaysTaskSection tasks={response.todaysTask} delay={500} />
+
       {/* Music suggestion */}
       {response.musicSuggestion && (
         <div
@@ -212,11 +318,13 @@ export default function AIResponsePanel({ response, isLoading, query }) {
           style={{
             background: 'rgba(0,245,196,0.06)',
             border: '1px solid rgba(0,245,196,0.15)',
-            animationDelay: '500ms',
+            animationDelay: '600ms',
           }}
         >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(0,245,196,0.15)' }}>
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(0,245,196,0.15)' }}
+          >
             <Music size={18} color="#00F5C4" />
           </div>
           <div className="min-w-0">
@@ -224,14 +332,14 @@ export default function AIResponsePanel({ response, isLoading, query }) {
               <span className="font-display font-semibold text-sm" style={{ color: '#00F5C4' }}>
                 Music for Your Mood
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full font-mono"
-                style={{ background: 'rgba(0,245,196,0.15)', color: '#00F5C4' }}>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full font-mono"
+                style={{ background: 'rgba(0,245,196,0.15)', color: '#00F5C4' }}
+              >
                 {response.musicSuggestion.mood}
               </span>
             </div>
-            <p className="text-sm font-semibold text-white/80">
-              {response.musicSuggestion.artist}
-            </p>
+            <p className="text-sm font-semibold text-white/80">{response.musicSuggestion.artist}</p>
             <p className="text-xs text-white/40 mt-0.5">{response.musicSuggestion.genre}</p>
             <p className="text-xs text-white/50 mt-1">{response.musicSuggestion.reason}</p>
           </div>
@@ -245,7 +353,7 @@ export default function AIResponsePanel({ response, isLoading, query }) {
           style={{
             background: 'rgba(255,215,0,0.05)',
             border: '1px solid rgba(255,215,0,0.12)',
-            animationDelay: '600ms',
+            animationDelay: '700ms',
           }}
         >
           <p className="text-sm text-white/70 italic leading-relaxed">
