@@ -4,14 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CampusLife AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 body{background:#080B14;color:#E8EAF0;font-family:'DM Sans',sans-serif;min-height:100vh}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#0D1120}::-webkit-scrollbar-thumb{background:#1A2035;border-radius:3px}
 .glass{background:rgba(13,17,32,.85);backdrop-filter:blur(20px);border:1px solid rgba(26,32,53,.8);border-radius:16px}
@@ -173,7 +173,7 @@ function PgDash({profile,setProfile}){
   return(
     <div style={{padding:'20px',maxWidth:'1000px',margin:'0 auto'}} className="fi">
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
-        <div><h1 style={{fontFamily:'Syne',fontWeight:800,fontSize:'20px',color:'#fff'}}>{greet}, Aryan 👋</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)',marginTop:'2px'}}>MSc Data Science · {new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p></div>
+        <div><h1 style={{fontFamily:'Syne',fontWeight:800,fontSize:'20px',color:'#fff'}}>{greet}, {profile?.name||'Student'} 👋</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)',marginTop:'2px'}}>{profile?.major||'Student'} · {new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p></div>
         <div style={{textAlign:'right'}}><div style={{fontFamily:'JetBrains Mono',fontWeight:700,fontSize:'22px',color:'#FFD700',textShadow:'0 0 8px rgba(255,215,0,.6)'}}>{tok}</div><div style={{fontSize:'11px',color:'rgba(255,255,255,.3)'}}>Campus Tokens</div></div>
       </div>
       <div className="glass" style={{padding:'12px 16px',marginBottom:'14px',display:'flex',alignItems:'center',gap:'14px',border:'1px solid rgba(108,99,255,.2)'}}>
@@ -464,7 +464,7 @@ function PgAnalytics({profile}){
     <div style={{padding:'20px',maxWidth:'900px',margin:'0 auto'}} className="fi">
       <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'16px'}}>
         <div style={{width:'38px',height:'38px',borderRadius:'12px',background:'rgba(108,99,255,.15)',border:'1px solid rgba(108,99,255,.25)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'16px'}}>📊</div>
-        <div><h1 style={{fontFamily:'Syne',fontWeight:700,fontSize:'18px',color:'#fff'}}>Analytics</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)'}}>Aryan Mehta · This Week</p></div>
+        <div><h1 style={{fontFamily:'Syne',fontWeight:700,fontSize:'18px',color:'#fff'}}>Analytics</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)'}}>{profile?.name||'Student'} · This Week</p></div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:'9px',marginBottom:'14px'}}>
         {[{icon:'⚡',l:'Sessions',v:WK.s,c:'#6C63FF'},{icon:'🪙',l:'Tokens earned',v:WK.tt,c:'#FFD700'},{icon:'📚',l:'Study hours',v:`${WK.th}h`,c:'#00F5C4'},{icon:'⚠️',l:'At risk',v:atR,c:'#FF6B6B'}].map(s=><div key={s.l} className="glass" style={{padding:'14px',border:`1px solid ${s.c}20`}}>
@@ -505,7 +505,7 @@ function PgWeekly({profile}){
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'16px'}}>
         <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
           <div style={{width:'38px',height:'38px',borderRadius:'12px',background:'rgba(0,245,196,.12)',border:'1px solid rgba(0,245,196,.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'16px'}}>📈</div>
-          <div><h1 style={{fontFamily:'Syne',fontWeight:700,fontSize:'18px',color:'#fff'}}>Weekly Report</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)'}}>Week {wk} · Aryan Mehta</p></div>
+          <div><h1 style={{fontFamily:'Syne',fontWeight:700,fontSize:'18px',color:'#fff'}}>Weekly Report</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)'}}> Week {wk} · {profile?.name||'Student'}</p></div>
         </div>
       </div>
       <div className="glass" style={{padding:'14px',marginBottom:'10px',border:'1px solid rgba(0,245,196,.15)'}}>
@@ -545,7 +545,7 @@ function PgWeekly({profile}){
 }
 
 /* PAGE: SETTINGS */
-function PgSettings(){
+function PgSettings({profile}){
   const [p,setP]=useState({dr:false,sa:true,wa:true,vi:true,tt:false,sd:true,fs:false});
   const tog=k=>setP(x=>({...x,[k]:!x[k]}));
   function Tog({label,desc,k,icon,color='#6C63FF'}){
@@ -567,8 +567,8 @@ function PgSettings(){
         <div><h1 style={{fontFamily:'Syne',fontWeight:700,fontSize:'18px',color:'#fff'}}>Settings</h1><p style={{fontSize:'11px',color:'rgba(255,255,255,.3)'}}>Preferences saved locally</p></div>
       </div>
       <Sec title="Account" ch={<div style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 0'}}>
-        <div style={{width:'38px',height:'38px',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:700,fontSize:'13px',background:'linear-gradient(135deg,#6C63FF,#00F5C4)',color:'#fff',flexShrink:0}}>AM</div>
-        <div style={{flex:1}}><p style={{fontWeight:600,fontSize:'13px',color:'rgba(255,255,255,.85)'}}>Aryan Mehta</p><p style={{fontSize:'10px',color:'rgba(255,255,255,.35)',fontFamily:'JetBrains Mono'}}>340 tokens · Lv.4</p></div>
+        <div style={{width:'38px',height:'38px',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:700,fontSize:'13px',background:'linear-gradient(135deg,#6C63FF,#00F5C4)',color:'#fff',flexShrink:0}}>{(profile?.name||'S').charAt(0).toUpperCase()}</div>
+        <div style={{flex:1}}><p style={{fontWeight:600,fontSize:'13px',color:'rgba(255,255,255,.85)'}}>{profile?.name||'Student'}</p><p style={{fontSize:'10px',color:'rgba(255,255,255,.35)',fontFamily:'JetBrains Mono'}}>{profile?.tokens||0} tokens · Lv.{Math.floor((profile?.tokens||0)/100)+1}</p></div>
         <span className="tag" style={{background:'rgba(0,245,196,.1)',color:'#00F5C4'}}>MSc Data Science</span>
       </div>}/>
       <Sec title="Notifications" ch={<><Tog label="Daily reminder" desc="Nudge at preferred time" k="dr" icon="🔔"/><Tog label="Streak alerts" desc="Warn before streak breaks" k="sa" icon="🔥" color="#FF6B6B"/><Tog label="Weekly report alert" k="wa" icon="📈" color="#00F5C4"/></>}/>
@@ -594,10 +594,10 @@ function Sidebar({page,setPage,profile}){
       </div>
       {!col?<div style={{margin:'8px',padding:'9px',borderRadius:'12px',background:'rgba(108,99,255,.07)',border:'1px solid rgba(108,99,255,.15)'}}>
         <div style={{display:'flex',alignItems:'center',gap:'7px'}}>
-          <div style={{width:'28px',height:'28px',borderRadius:'9px',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:700,fontSize:'10px',background:'linear-gradient(135deg,#6C63FF,#00F5C4)',color:'#fff'}}>AM</div>
-          <div style={{minWidth:0}}><p style={{fontSize:'11px',fontWeight:600,color:'rgba(255,255,255,.8)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>Aryan Mehta</p><p style={{fontSize:'9px',color:'rgba(255,255,255,.3)',fontFamily:'JetBrains Mono'}}>Lv.{lv} · {tok}pts</p></div>
+          <div style={{width:'28px',height:'28px',borderRadius:'9px',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:700,fontSize:'10px',background:'linear-gradient(135deg,#6C63FF,#00F5C4)',color:'#fff'}}>{(profile?.name||'S').charAt(0).toUpperCase()}</div>
+          <div style={{minWidth:0}}><p style={{fontSize:'11px',fontWeight:600,color:'rgba(255,255,255,.8)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{profile?.name||'Student'}</p><p style={{fontSize:'9px',color:'rgba(255,255,255,.3)',fontFamily:'JetBrains Mono'}}>Lv.{lv} · {tok}pts</p></div>
         </div>
-      </div>:<div style={{display:'flex',justifyContent:'center',padding:'8px 0'}}><div style={{width:'26px',height:'26px',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:700,fontSize:'9px',background:'linear-gradient(135deg,#6C63FF,#00F5C4)',color:'#fff'}}>AM</div></div>}
+      </div>:<div style={{display:'flex',justifyContent:'center',padding:'8px 0'}}><div style={{width:'26px',height:'26px',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:700,fontSize:'9px',background:'linear-gradient(135deg,#6C63FF,#00F5C4)',color:'#fff'}}>{(profile?.name||'S').charAt(0).toUpperCase()}</div></div>}
       <nav style={{flex:1,padding:'3px 6px',overflowY:'auto'}}>
         {NAV.map(({id,l,i,n})=><button key={id} onClick={()=>setPage(id)} title={col?l:undefined} className={`nav-btn${page===id?' active':''}`} style={{marginBottom:'1px'}}>
           <span style={{fontSize:'14px',flexShrink:0}}>{i}</span>
@@ -665,7 +665,7 @@ function App(){
       case 'copilot':   return <PgDash profile={profile} setProfile={setProfile}/>;
       case 'analytics': return <PgAnalytics profile={profile}/>;
       case 'weekly':    return <PgWeekly profile={profile}/>;
-      case 'settings':  return <PgSettings/>;
+      case 'settings':  return <PgSettings profile={profile}/>;
       default:          return <PgDash profile={profile} setProfile={setProfile}/>;
     }
   };
